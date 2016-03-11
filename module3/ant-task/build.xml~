@@ -1,0 +1,73 @@
+<project name="MyProject" default="dist" basedir=".">
+
+  <target name="clean">
+    <property file="config/project.properties"/>
+    <delete dir="${my.build}"/>
+    <delete dir="${my.dist}"/>
+    <delete dir="${my.output}"/>
+  </target>
+
+
+  <target name="init" depends="clean">
+    <property file="config/project.properties"/>
+  <tstamp>
+      <format property="TIME_STAMP" pattern="dd-MM-yyyy' 'HH:mm"/>
+  </tstamp>
+    <mkdir dir="${my.build}"/>
+    <mkdir dir="${my.output}"/>
+	<echo>Searching for additional libs...</echo>
+      <path id="my.classpath">
+	   <pathelement location="${my.build}"/>
+           <pathelement path="${my.lib}/commons-collections-3.2.2.jar"/>
+           <pathelement path="${my.lib}/junit-4.12.jar"/>
+           <pathelement path="${my.lib}/hamcrest-core-1.3.jar"/>
+           <pathelement path="${my.lib}/ant-junit-1.6.4.jar"/>
+     </path>
+  </target>
+
+
+
+  <target name="compile" depends="init" >
+    <javac includeantruntime="false" srcdir="${my.src}" destdir="${my.build}">
+	      <classpath refid="my.classpath"/>
+    </javac>
+    <javac includeantruntime="false" srcdir="${my.test}" destdir="${my.build}">
+	      <classpath refid="my.classpath"/>
+    </javac>
+  </target>
+
+  <target name="test" depends="compile">
+	<junit printsummary="yes">
+	      <classpath refid="my.classpath"/>
+          <test name="com.test.UnitTest" outfile="${my.build}/result">
+	  <formatter type="xml"/>
+	  </test>
+	</junit>
+  </target>
+
+
+  <target name="dist" depends="test" >
+    <mkdir dir="${my.dist}/lib"/>
+	<echo>Creating JAR-file with current timestamp</echo>
+    <jar jarfile="${my.dist}/lib/MyProject-${TIME_STAMP}.jar" basedir="${my.build}"/>
+	<echo>Prepairing files to be zipped</echo>
+       <copy file="./build.xml" tofile="${my.dist}/lib/build.xml" overwrite="true"/>
+
+       <copy file="${my.lib}/commons-collections-3.2.2.jar" tofile="${my.dist}/lib/commons-collections-3.2.2.jar" overwrite="true"/>
+
+       <copy file="./config/project.properties" tofile="${my.dist}/lib/project.properties" overwrite="true"/> 
+
+	<tar destfile="${my.output}/My-Project-${TIME_STAMP}.tar.gz" compression="gzip">
+
+          <tarfileset dir="${my.dist}/lib/">
+		<include name="MyProject-${TIME_STAMP}.jar"/>
+		<include name="build.xml"/>
+		<include name="commons-collections-3.2.2.jar"/>
+		<include name="project.properties"/>
+	  </tarfileset>
+
+
+  </target>
+
+
+</project>

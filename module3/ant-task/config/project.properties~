@@ -1,0 +1,6 @@
+project.src=src
+project.build=build
+project.dist=dist
+project.lib=lib
+project.test=test
+project.output=output
