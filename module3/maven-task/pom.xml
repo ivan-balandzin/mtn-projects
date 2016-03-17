@@ -38,23 +38,7 @@
 
 
   <build>
-    <finalName>${Name} ${maven.build.timestamp} Version ${version}</finalName>
-    <plugins>
-      <plugin>
-	      <inherited>true</inherited>
-        <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-source-plugin</artifactId>
-         <version>3.0.0</version>
-         <executions>
-          <execution>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-         </executions>
-      </plugin>
-      
-    </plugins>
+    <finalName>Artefact</finalName>
   </build>
 
 </project>
